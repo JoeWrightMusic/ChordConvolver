@@ -176,7 +176,7 @@ t = Task{
 	});
 };
 
-//__________________Addition
+//__________________Subtraction
 ~subtraction = Task{
 	var len, tempNote, temp8ve, span8ves;
 	//get the length of the longer chord list
@@ -236,8 +236,8 @@ s.boot;
  \___ \   | |  |  __| |  ___/    / /
  ____) |  | |  | |____| |       / /_
 |_____/   |_|  |______|_|      |____|
-*/
-/* STEP 2 - CHOOSE A CHORD FUNCTION & GENERATE A NEW CHORD
+*
+* STEP 2 - CHOOSE A CHORD FUNCTION & GENERATE A NEW CHORD
 *           (excecute one line below - cmd+enter/ctl+enter - with your desired function)
 *           all functions wrap the shorter chord list (a or b) to generate a full
 *           list of output chords. You can re-run this step as many times as you like
@@ -280,7 +280,7 @@ s.boot;
 */
 
 
-// mirror / inverse
+// MIRROR / inverse
 //====================================================================
 
 
@@ -291,8 +291,14 @@ s.boot;
  \___ \   | |  |  __| |  ___/   |__ <
  ____) |  | |  | |____| |       ___) |
 |_____/   |_|  |______|_|      |____/
+*
+* STEP 3 - LISTEN BACK / PRINT OUTPUT
+*          By default, the notes of the output chord are left in the order they're generated. This can mean that,
+*          for input chords of different lengths, the resulting output may not be in order of low-high pitched
+*          tones. To fix this, excecute the "x.sort" line first, and then play the output.
 */
+x.sort //if needed, excecute this line with cmd+enter (mac) or ctl+enter (win)
+//PLAY & PRINT OUTPUT
+t.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win)
 
-x.sort
-//PLAY OUTPUT
-t.reset.play;
+
