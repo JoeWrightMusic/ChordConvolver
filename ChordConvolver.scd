@@ -105,7 +105,7 @@ t = Task{
 	for(0, len-1, {
 		|i|
 		//get the multiplied note %12
-		tempNote = (a.wrapAt(i)*b.wrapAt(i))%12;
+		tempNote = (a.wrapAt(i)*b.wrapAt(i)) % 12;
 		//round to nearest 1/4 tone
 		tempNote = tempNote.round(0.25);
 		//get the lowest 8ve from a & b at current index
@@ -136,6 +136,58 @@ t = Task{
 		tempNote = (a.wrapAt(i)/(d.wrapAt(i)[1])).round(0.25);
 		//remove surplus 8ves
 		tempNote = tempNote/12;
+		//get the lowest 8ve from a & b at current index
+		if(c.wrapAt(i)[1]<=d.wrapAt(i)[1], {temp8ve=c.wrapAt(i)[1]}, {temp8ve=d.wrapAt(i)[1]});
+		//get the range between those 8ves / 2
+		span8ves = (c.wrapAt(i)[1] - d.wrapAt(i)[1]).abs;
+		//find the mid-point 8ve between a&b
+		if(span8ves>0, {
+			span8ves=(span8ves*0.5).round(1);
+			temp8ve = temp8ve+span8ves;
+			});
+		//transfer result to output array, x
+		x[i] = tempNote+(12*temp8ve);
+	});
+};
+
+//__________________Addition
+~addition = Task{
+	var len, tempNote, temp8ve, span8ves;
+	//get the length of the longer chord list
+	if(a.size>=b.size, {len=a.size}, {len=b.size});
+	//create array, x, that is the the same size as the longer chord list
+	x = Array.newClear(len);
+
+	for(0, len-1, {
+		|i|
+		//get the added note %12
+		tempNote = (a.wrapAt(i) + b.wrapAt(i)) % 12;
+		//get the lowest 8ve from a & b at current index
+		if(c.wrapAt(i)[1]<=d.wrapAt(i)[1], {temp8ve=c.wrapAt(i)[1]}, {temp8ve=d.wrapAt(i)[1]});
+		//get the range between those 8ves / 2
+		span8ves = (c.wrapAt(i)[1] - d.wrapAt(i)[1]).abs;
+		//find the mid-point 8ve between a&b
+		if(span8ves>0, {
+			span8ves=(span8ves*0.5).round(1);
+			temp8ve = temp8ve+span8ves;
+			});
+		//transfer result to output array, x
+		x[i] = tempNote+(12*temp8ve);
+	});
+};
+
+//__________________Addition
+~subtraction = Task{
+	var len, tempNote, temp8ve, span8ves;
+	//get the length of the longer chord list
+	if(a.size>=b.size, {len=a.size}, {len=b.size});
+	//create array, x, that is the the same size as the longer chord list
+	x = Array.newClear(len);
+
+	for(0, len-1, {
+		|i|
+		//get the subtracted note %12
+		tempNote = (a.wrapAt(i) - b.wrapAt(i)) % 12;
 		//get the lowest 8ve from a & b at current index
 		if(c.wrapAt(i)[1]<=d.wrapAt(i)[1], {temp8ve=c.wrapAt(i)[1]}, {temp8ve=d.wrapAt(i)[1]});
 		//get the range between those 8ves / 2
@@ -202,16 +254,32 @@ s.boot;
 
 // DIVIDE
 ~divide.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win)
-/* Divides corresponding notes in each chord by taking the midi value from a and dividing by b%12. *  the result is then transposed back to the original register of a&b.If the note-pairs are in *    *  different octaves, the midpoint rounded to the nearest 8ve is used.
+/* Divides corresponding notes in each chord by taking the midi value from a and dividing by b%12.
+*  the result is then transposed back to the original register of a&b.If the note-pairs are in
+*  different octaves, the midpoint rounded to the nearest 8ve is used.
+*/
+
+// ADDITION
+~addition.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win)
+/* Adds corresponding notes in each chord. The two notes are summed and then transposed back down
+*  in 8ves to match the original octave of the input notes. If the note-pairs are in different
+*  octaves, the midpoint rounded to the nearest 8ve is used.
+*/
+
+// SUBTRACTION
+~subtraction.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win)
+/* Subtracts corresponding notes in each chord. Note a is subtracted from note b, and then transposed
+*  back in 8ves to match the original octave of the input notes. If the note-pairs are in different
+*  octaves, the midpoint rounded to the nearest 8ve is used.
 */
 
 // SHADOW
 ~shadow.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win)
+/* Adds together chord lists a & b and then creates a new chord from the mid-points (shadows) between those notes.
+*
+*/
 
 
-
-// shadow
-// add
 // mirror / inverse
 //====================================================================
 
