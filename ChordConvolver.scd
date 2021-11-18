@@ -13,7 +13,6 @@
 */
 //==============================================================
 
-
 /*
   _____ _______ ______ _____    __
  / ____|__   __|  ____|  __ \  /_ |
@@ -67,10 +66,18 @@ SynthDef(\playTone,{
 t = Task{
 	"".postln;
 	"____________________".postln;
+	~lastProcess.postln;
+	"____________________".postln;
+
 	"CHORD A:".postln;
 	for(0, a.size-1, {
 		|i|
-		a[i].postln;
+		a[i].post;
+		if(a[i]%1>0,{"".post}, {".00".post});
+		"\t".post;
+		"(".post;
+		a[i].floor(1).midinote.post;
+		if(a[i]%1>0,{" + 1/4tone)".postln}, {")".postln});
 		Synth(\playTone, [\freq, a[i].midicps]);
 		0.15.wait;
 	});
@@ -79,7 +86,12 @@ t = Task{
 	"CHORD B:".postln;
 	for(0, b.size-1, {
 		|i|
-		b[i].postln;
+		b[i].post;
+		if(b[i]%1>0,{"".post}, {".00".post});
+		"\t".post;
+		"(".post;
+		b[i].floor(1).midinote.post;
+		if(b[i]%1>0,{" + 1/4tone)".postln}, {")".postln});
 		Synth(\playTone, [\freq, b[i].midicps]);
 		0.15.wait;
 	});
@@ -88,7 +100,12 @@ t = Task{
 	"OUTPUT:".postln;
 	for(0, x.size-1, {
 		|i|
-		x[i].postln;
+		x[i].post;
+		if(x[i]%1>0,{"".post}, {".00".post});
+		"\t".post;
+		"(".post;
+		x[i].floor(1).midinote.post;
+		if(x[i]%1>0,{" + 1/4tone)".postln}, {")".postln});
 		Synth(\playTone, [\freq,x[i].midicps]);
 		0.15.wait;
 	});
@@ -121,6 +138,7 @@ t = Task{
 		//transfer result to output array, x
 		x[i] = tempNote+(12*temp8ve);
 	});
+	~lastProcess="MULTIPLY";
 };
 
 //__________________Divide
@@ -149,6 +167,7 @@ t = Task{
 		//transfer result to output array, x
 		x[i] = tempNote+(12*temp8ve);
 	});
+	~lastProcess="A DIVIDES B";
 };
 ~bDividesA = Task{
 	var len, tempNote, temp8ve, span8ves;
@@ -175,6 +194,7 @@ t = Task{
 		//transfer result to output array, x
 		x[i] = tempNote+(12*temp8ve);
 	});
+	~lastProcess="B DIVIDES A";
 };
 
 //__________________Addition
@@ -201,6 +221,7 @@ t = Task{
 		//transfer result to output array, x
 		x[i] = tempNote+(12*temp8ve);
 	});
+	~lastProcess="ADDITION";
 };
 
 //__________________Subtraction
@@ -227,6 +248,7 @@ t = Task{
 		//transfer result to output array, x
 		x[i] = tempNote+(12*temp8ve);
 	});
+	~lastProcess="A SUBTRACTS B";
 };
 ~bSubtractA = Task{
 	var len, tempNote, temp8ve, span8ves;
@@ -251,6 +273,7 @@ t = Task{
 		//transfer result to output array, x
 		x[i] = tempNote+(12*temp8ve);
 	});
+	~lastProcess="B SUBTRACTS A";
 };
 
 //__________________Shadow
@@ -273,6 +296,7 @@ t = Task{
 		//transfer result to output array, x
 		x[i] = tempNote;
 	});
+	~lastProcess="SHADOW";
 };
 
 //__________________Mirrors
@@ -292,6 +316,7 @@ t = Task{
 		//transfer result to output array, x
 		x[i] = tempNote;
 	});
+	~lastProcess="A MIRRORS B";
 };
 ~b_mirrorsA = Task{
 	var axis, diff, tempNote;
@@ -309,6 +334,7 @@ t = Task{
 		//transfer result to output array, x
 		x[i] = tempNote;
 	});
+	~lastProcess="B MIRRORS A";
 };
 
 //__________________Mid Point
@@ -328,10 +354,10 @@ t = Task{
 		//transfer result to output array, x
 		x[i] = tempNote;
 	});
+	~lastProcess="MID POINT";
 };
 
 
-};
 
 s.boot;
 )
