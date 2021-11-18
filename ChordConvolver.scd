@@ -108,7 +108,7 @@ t = Task{
 		//get the multiplied note %12
 		tempNote = (a.wrapAt(i)*b.wrapAt(i)) % 12;
 		//round to nearest 1/4 tone
-		tempNote = tempNote.round(0.25);
+		tempNote = tempNote.round(0.5);
 		//get the lowest 8ve from a & b at current index
 		if(c.wrapAt(i)[1]<=d.wrapAt(i)[1], {temp8ve=c.wrapAt(i)[1]}, {temp8ve=d.wrapAt(i)[1]});
 		//get the range between those 8ves / 2
@@ -134,9 +134,9 @@ t = Task{
 	for(0, len-1, {
 		|i|
 		//get the note of chord a divided by the note from b%12 to nearest 1/4t
-		tempNote = (b.wrapAt(i)/(c.wrapAt(i)[1])).round(0.25);
+		tempNote = (b.wrapAt(i)/(c.wrapAt(i)[1])).round(0.5);
 		//remove surplus 8ves & round to nearest 1/4t
-		tempNote = (tempNote/12).round(0.25);
+		tempNote = (tempNote/12).round(0.5);
 		//get the lowest 8ve from a & b at current index
 		if(d.wrapAt(i)[1]<=c.wrapAt(i)[1], {temp8ve=d.wrapAt(i)[1]}, {temp8ve=c.wrapAt(i)[1]});
 		//get the range between those 8ves / 2
@@ -160,9 +160,9 @@ t = Task{
 	for(0, len-1, {
 		|i|
 		//get the note of chord a divided by the note from b%12 to nearest 1/4t
-		tempNote = (a.wrapAt(i)/(d.wrapAt(i)[1])).round(0.25);
+		tempNote = (a.wrapAt(i)/(d.wrapAt(i)[1])).round(0.5);
 		//remove surplus 8ves & round to nearest 1/4t
-		tempNote = (tempNote/12).round(0.25);
+		tempNote = (tempNote/12).round(0.5);
 		//get the lowest 8ve from a & b at current index
 		if(c.wrapAt(i)[1]<=d.wrapAt(i)[1], {temp8ve=c.wrapAt(i)[1]}, {temp8ve=d.wrapAt(i)[1]});
 		//get the range between those 8ves / 2
@@ -269,7 +269,7 @@ t = Task{
 		//get mid point between two notes in ab
 		tempNote = ab[i] + ( (ab[i+1]-ab[i])*0.5 );
 		//round to nearest 1/4t
-		tempNote = tempNote.round(0.25);
+		tempNote = tempNote.round(0.5);
 		//transfer result to output array, x
 		x[i] = tempNote;
 	});
@@ -324,10 +324,13 @@ t = Task{
 		//calculate mid point between notes
 		tempNote = a.wrapAt(i)+b.wrapAt(i)*0.5;
 		//round to nearest 1/4t
-		tempNote = tempNote.round(0.25);
+		tempNote = tempNote.round(0.5);
 		//transfer result to output array, x
 		x[i] = tempNote;
 	});
+};
+
+
 };
 
 s.boot;
