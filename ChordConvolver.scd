@@ -57,7 +57,8 @@ SynthDef(\playTone,{
 	arg freq;
 	var sig, env;
 	env = EnvGen.kr(Env.linen(0.1, 3, 1), doneAction:2);
-	sig = DPW3Tri.ar(freq)*0.1;
+	sig = BlitB3Square.ar(freq)*0.1;
+	sig = Resonz.ar(sig, freq, 1);
 	sig = sig*env;
 	Out.ar(0, sig!2);
 }).add;
@@ -123,7 +124,33 @@ t = Task{
 };
 
 //__________________Divide
-~divide = Task{
+~aDividesB = Task{
+	var len, tempNote, temp8ve, span8ves;
+	//get the length of the longer chord list
+	if(a.size>=b.size, {len=a.size}, {len=b.size});
+	//create array, x, that is the the same size as the longer chord list
+	x = Array.newClear(len);
+
+	for(0, len-1, {
+		|i|
+		//get the note of chord a divided by the note from b%12 to nearest 1/4t
+		tempNote = (b.wrapAt(i)/(c.wrapAt(i)[1])).round(0.25);
+		//remove surplus 8ves & round to nearest 1/4t
+		tempNote = (tempNote/12).round(0.25);
+		//get the lowest 8ve from a & b at current index
+		if(d.wrapAt(i)[1]<=c.wrapAt(i)[1], {temp8ve=d.wrapAt(i)[1]}, {temp8ve=c.wrapAt(i)[1]});
+		//get the range between those 8ves / 2
+		span8ves = (d.wrapAt(i)[1] - c.wrapAt(i)[1]).abs;
+		//find the mid-point 8ve between a&b
+		if(span8ves>0, {
+			span8ves=(span8ves*0.5).round(1);
+			temp8ve = temp8ve+span8ves;
+			});
+		//transfer result to output array, x
+		x[i] = tempNote+(12*temp8ve);
+	});
+};
+~bDividesA = Task{
 	var len, tempNote, temp8ve, span8ves;
 	//get the length of the longer chord list
 	if(a.size>=b.size, {len=a.size}, {len=b.size});
@@ -134,8 +161,8 @@ t = Task{
 		|i|
 		//get the note of chord a divided by the note from b%12 to nearest 1/4t
 		tempNote = (a.wrapAt(i)/(d.wrapAt(i)[1])).round(0.25);
-		//remove surplus 8ves
-		tempNote = tempNote/12;
+		//remove surplus 8ves & round to nearest 1/4t
+		tempNote = (tempNote/12).round(0.25);
 		//get the lowest 8ve from a & b at current index
 		if(c.wrapAt(i)[1]<=d.wrapAt(i)[1], {temp8ve=c.wrapAt(i)[1]}, {temp8ve=d.wrapAt(i)[1]});
 		//get the range between those 8ves / 2
@@ -177,7 +204,7 @@ t = Task{
 };
 
 //__________________Subtraction
-~subtraction = Task{
+~aSubtractB = Task{
 	var len, tempNote, temp8ve, span8ves;
 	//get the length of the longer chord list
 	if(a.size>=b.size, {len=a.size}, {len=b.size});
@@ -192,6 +219,30 @@ t = Task{
 		if(c.wrapAt(i)[1]<=d.wrapAt(i)[1], {temp8ve=c.wrapAt(i)[1]}, {temp8ve=d.wrapAt(i)[1]});
 		//get the range between those 8ves / 2
 		span8ves = (c.wrapAt(i)[1] - d.wrapAt(i)[1]).abs;
+		//find the mid-point 8ve between a&b
+		if(span8ves>0, {
+			span8ves=(span8ves*0.5).round(1);
+			temp8ve = temp8ve+span8ves;
+			});
+		//transfer result to output array, x
+		x[i] = tempNote+(12*temp8ve);
+	});
+};
+~bSubtractA = Task{
+	var len, tempNote, temp8ve, span8ves;
+	//get the length of the longer chord list
+	if(a.size>=b.size, {len=a.size}, {len=b.size});
+	//create array, x, that is the the same size as the longer chord list
+	x = Array.newClear(len);
+
+	for(0, len-1, {
+		|i|
+		//get the subtracted note %12
+		tempNote = (b.wrapAt(i) - a.wrapAt(i)) % 12;
+		//get the lowest 8ve from a & b at current index
+		if(d.wrapAt(i)[1]<=c.wrapAt(i)[1], {temp8ve=d.wrapAt(i)[1]}, {temp8ve=c.wrapAt(i)[1]});
+		//get the range between those 8ves / 2
+		span8ves = (d.wrapAt(i)[1] - c.wrapAt(i)[1]).abs;
 		//find the mid-point 8ve between a&b
 		if(span8ves>0, {
 			span8ves=(span8ves*0.5).round(1);
@@ -217,6 +268,61 @@ t = Task{
 		|i|
 		//get mid point between two notes in ab
 		tempNote = ab[i] + ( (ab[i+1]-ab[i])*0.5 );
+		//round to nearest 1/4t
+		tempNote = tempNote.round(0.25);
+		//transfer result to output array, x
+		x[i] = tempNote;
+	});
+};
+
+//__________________Mirrors
+~a_mirrorsB = Task{
+	var axis, diff, tempNote;
+	//calculate the axis for reflection
+	axis = a.mean;
+	//create a new array with b.size number of items
+	x = Array.newClear(b.size);
+	//reflect items of b around the axis
+	for(0, b.size-1, {
+		|i|
+		//calculate distance from axis to b[i]
+		diff = b[i]-axis;
+		//calculate mirror note around axis
+		tempNote = axis + (-1 * diff);
+		//transfer result to output array, x
+		x[i] = tempNote;
+	});
+};
+~b_mirrorsA = Task{
+	var axis, diff, tempNote;
+	//calculate the axis for reflection
+	axis = b.mean;
+	//create a new array with b.size number of items
+	x = Array.newClear(a.size);
+	//reflect items of b around the axis
+	for(0, a.size-1, {
+		|i|
+		//calculate distance from axis to b[i]
+		diff = a[i]-axis;
+		//calculate mirror note around axis
+		tempNote = axis + (-1 * diff);
+		//transfer result to output array, x
+		x[i] = tempNote;
+	});
+};
+
+//__________________Mid Point
+~midPoint = Task{
+	var len, tempNote;
+	//get the length of the longer chord list
+	if(a.size>=b.size, {len=a.size}, {len=b.size});
+	//create array, x, that is the the same size as the longer chord list
+	x = Array.newClear(len);
+	//get mid points
+	for(0, len-1, {
+		|i|
+		//calculate mid point between notes
+		tempNote = a.wrapAt(i)+b.wrapAt(i)*0.5;
 		//round to nearest 1/4t
 		tempNote = tempNote.round(0.25);
 		//transfer result to output array, x
@@ -253,9 +359,10 @@ s.boot;
 */
 
 // DIVIDE
-~divide.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win)
-/* Divides corresponding notes in each chord by taking the midi value from a and dividing by b%12.
-*  the result is then transposed back to the original register of a&b.If the note-pairs are in
+~aDividesB.reset.play //excecute this line with cmd+enter (mac) or ctl+enter (win)
+~bDividesA.reset.play //excecute this line with cmd+enter (mac) or ctl+enter (win)
+/* Divides corresponding notes in each chord by taking the midi value from the 1st chord and dividing by
+*  2ndChord%12. the result is then transposed back to the original register of a&b.If the note-pairs are in
 *  different octaves, the midpoint rounded to the nearest 8ve is used.
 */
 
@@ -267,9 +374,10 @@ s.boot;
 */
 
 // SUBTRACTION
-~subtraction.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win)
-/* Subtracts corresponding notes in each chord. Note a is subtracted from note b, and then transposed
-*  back in 8ves to match the original octave of the input notes. If the note-pairs are in different
+~aSubtractB.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win)
+~bSubtractA.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win)
+/* Subtracts corresponding notes in each chord. 1st chord Note is subtracted from 2nd chord note, and then
+*  transposed back in 8ves to match the original octave of the input notes. If the note-pairs are in different
 *  octaves, the midpoint rounded to the nearest 8ve is used.
 */
 
@@ -279,8 +387,18 @@ s.boot;
 *
 */
 
+// A MIRRORS B
+~a_mirrorsB.reset.play;
+~b_mirrorsA.reset.play;
+/* A reflection point is calculated from the mean point of one chord, and used to reflect all the items in the other
+*  about that mean point.
+*/
 
-// MIRROR / inverse
+// MID POINT
+~midPoint.reset.play;
+/* Creates an output chord where each note is the mid-point between the two corresponding notes from chords a + b
+*
+*/
 //====================================================================
 
 
@@ -293,12 +411,13 @@ s.boot;
 |_____/   |_|  |______|_|      |____/
 *
 * STEP 3 - LISTEN BACK / PRINT OUTPUT
-*          By default, the notes of the output chord are left in the order they're generated. This can mean that,
-*          for input chords of different lengths, the resulting output may not be in order of low-high pitched
-*          tones. To fix this, excecute the "x.sort" line first, and then play the output.
+*          By default, the notes of the output chord are left in the order they're generated. This can mean that -
+*          for certain functions and for input chords of different lengths - the resulting output may not be in
+*          order of low-high pitched tones. To fix this, excecute the "x.sort" line first, and then play the output.
 */
 x.sort //if needed, excecute this line with cmd+enter (mac) or ctl+enter (win)
 //PLAY & PRINT OUTPUT
 t.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win)
+
 
 
