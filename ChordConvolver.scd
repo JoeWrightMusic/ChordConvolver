@@ -55,7 +55,7 @@ for(0, b.size-1, {
 SynthDef(\playTone,{
 	arg freq;
 	var sig, env;
-	env = EnvGen.kr(Env.linen(0.1, 3, 1), doneAction:2);
+	env = EnvGen.kr(Env.linen(0.1, 2, 1), doneAction:2);
 	sig = BlitB3Square.ar(freq)*0.1;
 	sig = Resonz.ar(sig, freq, 1);
 	sig = sig*env;
@@ -79,9 +79,9 @@ t = Task{
 		a[i].floor(1).midinote.post;
 		if(a[i]%1>0,{" + 1/4tone)".postln}, {")".postln});
 		Synth(\playTone, [\freq, a[i].midicps]);
-		0.15.wait;
+		0.1.wait;
 	});
-	3.5.wait;
+	2.5.wait;
 	"".postln;
 	"CHORD B:".postln;
 	for(0, b.size-1, {
@@ -93,9 +93,9 @@ t = Task{
 		b[i].floor(1).midinote.post;
 		if(b[i]%1>0,{" + 1/4tone)".postln}, {")".postln});
 		Synth(\playTone, [\freq, b[i].midicps]);
-		0.15.wait;
+		0.1.wait;
 	});
-	3.5.wait;
+	2.5.wait;
 	"".postln;
 	"OUTPUT:".postln;
 	for(0, x.size-1, {
@@ -107,7 +107,7 @@ t = Task{
 		x[i].floor(1).midinote.post;
 		if(x[i]%1>0,{" + 1/4tone)".postln}, {")".postln});
 		Synth(\playTone, [\freq,x[i].midicps]);
-		0.15.wait;
+		0.1.wait;
 	});
 	"____________________".postln;
 	"".postln;
