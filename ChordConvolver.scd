@@ -7,7 +7,7 @@
  \_____|_|  |_|\____/|_|  \_\_____/   \_____\____/|_| \_|   \/   \____/|______\/   |______|_|  \_\
 
 *  A set of functions for generating a new set of pitches from
-*  two given chords.
+*  two given midi chords.
 *  Created by Joe Wright for Edmund Hunt / the Augmented Reality project at
 *  Royal Birmingham Conservatoire, UK, 2021
 */
@@ -28,8 +28,7 @@
 a = [60, 62.75, 78, 80, 90.25, 100.5];//Input Chord 1
 b = [42, 47.75, 49, 51.25, 71.25];//Input Chord 2
 
-//1B -> THEN EXCECUTE THE CODE BLOCK
-//      (click on this line then hit cmd+enter (mac) or ctl+enter (win)
+//1B -> THEN EXCECUTE THE CODE BLOCK (click on this line then hit cmd+enter (mac) or ctl+enter (win/linux)
 //      NOW SCROLL DOWN TO STEP 2
 
 
@@ -380,7 +379,7 @@ s.boot;
 */
 
 // MULTIPLY
-~multiply.reset.play; // excecute this line with cmd+enter (mac) or ctl+enter (win)
+~multiply.reset.play; // excecute this line with cmd+enter (mac) or ctl+enter (win/linux)
 /* Multiplies corresponding notes in each chord. The two notes
 *  are multiplied and then transposed back down in 8ves to match the original
 *  octave of the input notes. If the note-pairs are in different octaves, the
@@ -388,30 +387,30 @@ s.boot;
 */
 
 // DIVIDE
-~aDividesB.reset.play //excecute this line with cmd+enter (mac) or ctl+enter (win)
-~bDividesA.reset.play //excecute this line with cmd+enter (mac) or ctl+enter (win)
+~aDividesB.reset.play //excecute this line with cmd+enter (mac) or ctl+enter (win/linux)
+~bDividesA.reset.play //excecute this line with cmd+enter (mac) or ctl+enter (win/linux)
 /* Divides corresponding notes in each chord by taking the midi value from the 1st chord and dividing by
 *  2ndChord%12. the result is then transposed back to the original register of a&b.If the note-pairs are in
 *  different octaves, the midpoint rounded to the nearest 8ve is used.
 */
 
 // ADDITION
-~addition.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win)
+~addition.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win/linux)
 /* Adds corresponding notes in each chord. The two notes are summed and then transposed back down
 *  in 8ves to match the original octave of the input notes. If the note-pairs are in different
 *  octaves, the midpoint rounded to the nearest 8ve is used.
 */
 
 // SUBTRACTION
-~aSubtractB.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win)
-~bSubtractA.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win)
+~aSubtractB.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win/linux)
+~bSubtractA.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win/linux)
 /* Subtracts corresponding notes in each chord. 1st chord Note is subtracted from 2nd chord note, and then
 *  transposed back in 8ves to match the original octave of the input notes. If the note-pairs are in different
 *  octaves, the midpoint rounded to the nearest 8ve is used.
 */
 
 // SHADOW
-~shadow.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win)
+~shadow.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win/linux)
 /* Adds together chord lists a & b and then creates a new chord from the mid-points (shadows) between those notes.
 *
 */
@@ -444,9 +443,9 @@ s.boot;
 *          for certain functions and for input chords of different lengths - the resulting output may not be in
 *          order of low-high pitched tones. To fix this, excecute the "x.sort" line first, and then play the output.
 */
-x.sort //if needed, excecute this line with cmd+enter (mac) or ctl+enter (win)
+x.sort //if needed, excecute this line with cmd+enter (mac) or ctl+enter (win/linux)
 //PLAY & PRINT OUTPUT
-t.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win)
+t.reset.play; //excecute this line with cmd+enter (mac) or ctl+enter (win/linux)
 
 
 
